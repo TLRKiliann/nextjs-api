@@ -1,14 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { comments } from '../../../data/comments'
 
-type CommentsProps = {
-  comments: {
-    id: number
-    text: string
-  }
-}
-
-export default function handler(req: NextApiRequest, res: NextApiResponse<CommentsProps>) {
+export default function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'GET') {
     res.status(200).json(comments)
   } else if (req.method === 'POST') {

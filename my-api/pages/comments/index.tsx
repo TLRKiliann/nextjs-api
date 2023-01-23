@@ -37,13 +37,25 @@ const CommentsPage = () => {
     const data = await response.json()
     setComments(data)
   }
+
+  const handleDelete = async (commentId: number) => {
+    const response = await fetch(`/api/comments/${commentId}`, {
+      method: 'DELETE'
+    })
+    const data = await response.json()
+    handleComments()
+  }
+
   return (
     <div>
       <input type='text' value={comment} onChange={(event) => handleChange(event)} />
       <button type='button' onClick={(event) => handleSubmit(event, comment)}>Enter</button>
       <button type='button' onClick={handleComments}>Load Comments</button>
       {comments.map((comment: any) => (
-        <p key={comment.id}>{comment.id} {comment.text}</p>
+        <div key={comment.id}>
+          {comment.id} {comment.text}
+          <button type="button" onClick={() => handleDelete(comment.id)}>Delete</button>
+        </div>
       ))}
     </div>
   )

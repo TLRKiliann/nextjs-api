@@ -5,6 +5,7 @@ const CommentsPage = () => {
   const [comments, setComments] = useState<Array<string>>([])
   const [comment, setComment] = useState<string>("")
 
+  /*
   useEffect(() => {
     const MyFunction = async () => {
       const response = await fetch("/api/comments")
@@ -14,6 +15,7 @@ const CommentsPage = () => {
     MyFunction()
     return console.log("useEffect updated !")
   }, [comment])
+  */
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setComment(event.target.value)

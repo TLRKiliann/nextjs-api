@@ -1,12 +1,8 @@
 # nextjs-api
 
-My first API to test CRUD with NextJS.
+I've used this address for this first app with nextjs and react-query
+to fetch data from this API:
 
-API with CRUD
-
-- create
-- read
-- update
-- delete
+https://github.com/r-spacex/SpaceX-API
 
 ko@l@tr33 :koala:

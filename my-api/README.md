@@ -1,38 +1,74 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# NextJS TanStack
 
-## Getting Started
+## Install
 
-First, run the development server:
+$ pnpm install
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
+---
+
+That's an exemple to use NextJS with @tanstack - TypeScript & Zod.
+
+└─ $ ▶ pnpm add @tanstack/react-query
+
+└─ $ ▶ pnpm add @tanstack/react-query-devtools (\_app.tsx)
+
+└─ $ ▶ pnpm add zod (index.tsx)
+
+---
+
+A little app to fetch static address with @tanstack (QueryClient()) & getStaticProps.
+
+This app display an image with some data.
+
+---
+
+\_app.tsx
+
+```
+import * as React from 'react'
+import type { AppProps } from "next/app"
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+
+const queryClient = new QueryClient()
+
+export default function MyApp({ Component, pageProps }: AppProps) {
+
+  return (
+    <QueryClientProvider client={queryClient}>
+      <Component {...pageProps} />
+    </QueryClientProvider>
+  )
+};
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+```
+  //const [queryClient] = React.useState(() => new QueryClient())
+  /*const [showDevtools, setShowDevtools] = React.useState(false)
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+/*const ReactQueryDevtoolsProduction = React.lazy(() =>
+  import('@tanstack/react-query-devtools/build/lib/index.prod.js').then(
+    (d) => ({
+      default: d.ReactQueryDevtools,
+    }),
+  ),
+)*/
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+export default function MyApp({ Component, pageProps }: AppProps) {
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+  const [queryClient] = React.useState(() => new QueryClient())
+  const [showDevtools, setShowDevtools] = React.useState(false)
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+  React.useEffect(() => {
+    // @ts-ignore
+    window.toggleDevtools = () => setShowDevtools((old) => !old)
+  }, [])
+  
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+/*
+      {showDevtools && (
+        <React.Suspense fallback={null}>
+          <ReactQueryDevtoolsProduction />
+        </React.Suspense>
+      )}
+*/
+```

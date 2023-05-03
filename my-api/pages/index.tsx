@@ -1,45 +1,62 @@
-import { dehydrate, QueryClient, useQuery } from 'react-query';
-import Image from 'next/image';
+import type { GetStaticProps } from 'next'
+import { dehydrate, QueryClient, useQuery } from '@tanstack/react-query'
+import Image from 'next/image'
+import { z } from 'zod'
 
 type SpaceXData = {
-  name: string
+  name: z.string;
   links: [
     patch: [
-      large: string
+      large: z.string,
     ]
   ]
 }
 
-const getSpaceXData = async () => await (await fetch("https://api.spacexdata.com/v5/launches/latest")).json();
+//const getSpaceXData: z.string = "https://api.spacexdata.com/v5/launches/latest"
 
-const Home: NextPage = () => {
-  const { data, isLoading, isFetching } = useQuery('spacex', getSpaceXData);
-  //console.log(data)
+const getSpaceXData = () => {
+  fetch("https://api.spacexdata.com/v5/launches/latest").then((res) => res.json())
+}
+
+const Home = () => {
+  const { data, isLoading, isError, error } = useQuery<SpaceXData>({
+    queryKey: ['spacex'],
+    queryFn: () => fetch(getSpaceXData).then((res) => res.json())
+  });
   
   if (isLoading) return <div>Loading...</div>
-  if (!data) return <div>No data</div>
+  
+  if (!data) {
+    return <div>No data</div>
+  } else {
+    console.log("data + cores : ", data, data?.date_local)
+  }
+
+  if (isError) {
+    return <h2>{error.message}</h2>
+  }
 
   return (
     <div>
 
       <h1>Start !</h1>
       <h2>{data?.name}</h2>
+      <h2>{data?.date_local}</h2>
       <Image
         src={data?.links.patch.large}
-        width={500}
-        height={500}
+        width={400}
+        height={375}
         alt="patch-img"
+        style={{width: "60%", height:"auto"}}
       />
     </div>
   )
 }
 export default Home;
 
-export async function getStaticProps() {
+export const getStaticProps: GetStaticProps = async (context) => {
   const queryClient = new QueryClient();
-
-  await queryClient.prefetchQuery<SpaceXData>("spacex", getSpaceXData);
-
+  await queryClient.prefetchQuery<SpaceXData>(["spacex"], getSpaceXData);
   return {
     props: {
       dehydratedState: dehydrate(queryClient)
